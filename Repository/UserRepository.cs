@@ -1,4 +1,5 @@
 ﻿using Practice_A.DataProvider;
+using Practice_A.Models.Authentication;
 namespace Practice_A.Repository
 {
     public class UserRepository : IUserRepository
@@ -8,10 +9,10 @@ namespace Practice_A.Repository
         {
             userProvider = _userProvider;
         }
-        public async Task<IEnumerable<string>>? GetUserName(string Email)
+        public async Task<UserDetailsModel>? GetUserName(string Email)
         {
-            var userName = await userProvider.GetUserName(Email);
-            return userName;
+            var user = await userProvider.GetUserName(Email);
+            return user;
         }
     }
 }

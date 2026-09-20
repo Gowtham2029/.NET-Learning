@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Practice_A.Models.Authentication;
-using Practice_A.Services;
 using Practice_A.Repository;
+using Practice_A.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace Practice_A.Controllers.Authentication
 {
@@ -17,24 +18,31 @@ namespace Practice_A.Controllers.Authentication
             _userRepository = userRepository;
         }
 
-        [HttpGet("Login")]
+        [HttpGet("User")]
         public async Task<IActionResult> GetUserName([FromQuery] String Email)
         {
-            var userName = await _userRepository.GetUserName(Email);
-            return Ok(userName);
-        }
+            // 1. validate the user (User Exists or not)
+            try
+            {
+                if (!new EmailAddressAttribute().IsValid(Email))
+                {
+                    return BadRequest("Invalid Email format.");
+                }
 
-        [HttpGet("Test")]
-        public IActionResult GetId()
-        {
-            return Ok(_service.Id);
-        }
+                // 2. If yes --> return login successful, else --> Return Invalid User
+                UserDetailsModel user = await _userRepository.GetUserName(Email);
+                if (user is null)
+                {
+                    return NotFound("User not found");
+                }
+                return Ok(user.name);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Invalid Login Attempt. Exception: {ex.Message}");
+                return StatusCode(500,"Error while logging In");
+            }
 
-        [HttpGet("GreetUser")]
-        public IActionResult GetGreetMessage(string? userName)
-        {
-            string GreetMessage = _service.GetGreetMessage(userName);
-            return Ok(GreetMessage);
         }
 
         [HttpGet("{id:int:min(1)}/orders")]
