@@ -1,7 +1,9 @@
-﻿namespace Practice_A.DataProvider
+﻿using Practice_A.Models.Authentication;
+
+namespace Practice_A.DataProvider
 {
     public interface IUserProvider
     {
-        public Task<IEnumerable<string>>? GetUserName(string Email);
+        public Task<UserDetailsModel>? GetUserName(string Email);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using MySqlConnector;
 using Practice_A.DataProvider;
+using Practice_A.Models.Authentication;
 
 namespace Practice_A.DataProvider
 {
@@ -11,17 +12,18 @@ namespace Practice_A.DataProvider
         {
             _configuration = configuration;
         }
-        public async Task<IEnumerable<string>>? GetUserName(string Email)
+        public async Task<UserDetailsModel>? GetUserName(string Email)
         {
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
 
+           
             // SET SQL_SAFE_UPDATES = 0; --> use this before delete, update commands
-
-            var sql = "select name from User";
+            var sql = "SELECT * FROM USER WHERE Email = @Email";
             using var connection = new MySqlConnection(connectionString);
 
-            var users = await connection.QueryAsync<string>(sql);
-            return users;
+            var user = await connection.QueryFirstOrDefaultAsync<UserDetailsModel>(sql, new { Email });
+            return user;
         }
     }
 }
+
