@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Practice_A.Models.Authentication;
 using Practice_A.Services;
+using Practice_A.Repository;
 
 namespace Practice_A.Controllers.Authentication
 {
@@ -9,10 +10,18 @@ namespace Practice_A.Controllers.Authentication
     public class AuthController : Controller
     {
         private readonly ITestService _service;
-
-        public AuthController(ITestService service)
+        private readonly IUserRepository _userRepository;
+        public AuthController(ITestService service, IUserRepository userRepository)
         {
             _service = service;
+            _userRepository = userRepository;
+        }
+
+        [HttpGet("Login")]
+        public async Task<IActionResult> GetUserName([FromQuery] String Email)
+        {
+            var userName = await _userRepository.GetUserName(Email);
+            return Ok(userName);
         }
 
         [HttpGet("Test")]

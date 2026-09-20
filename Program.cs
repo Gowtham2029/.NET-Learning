@@ -1,3 +1,5 @@
+using Practice_A.DataProvider;
+using Practice_A.Repository;
 using Practice_A.Services;
 using Scalar.AspNetCore;
 
@@ -10,6 +12,8 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<ITestService, TestService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserProvider, UserProvider>();
 
 var app = builder.Build();
 
